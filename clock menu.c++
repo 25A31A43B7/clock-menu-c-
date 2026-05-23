@@ -1,83 +1,87 @@
-#include <stdio.h>
-#include <time.h>
-#include <stdlib.h>
+#include <iostream>
+#include <ctime>
+#include <iomanip>
+
+using namespace std;
 
 void displayClock(int formatChoice) {
-    time_t now;
-    time(&now);
+    time_t now = time(0);
+    tm *local = localtime(&now);
 
-    struct tm *local = localtime(&now);
+    cout << "\n===== DIGITAL CLOCK =====\n\n";
 
-    printf("\n===== DIGITAL CLOCK =====\n\n");
-
-    // Print Date using loop (array concept)
     int dateParts[3];
     dateParts[0] = local->tm_mday;
     dateParts[1] = local->tm_mon + 1;
     dateParts[2] = local->tm_year + 1900;
 
-    printf("Date: ");
+    cout << "Date: ";
+
     for (int i = 0; i < 3; i++) {
         if (i == 2)
-            printf("%04d", dateParts[i]);
+            cout << setw(4) << setfill('0') << dateParts[i];
         else
-            printf("%02d-", dateParts[i]);
+            cout << setw(2) << setfill('0') << dateParts[i] << "-";
     }
 
-    printf("\n");
+    cout << endl;
 
     int hour = local->tm_hour;
 
-    // 12-hour format
     if (formatChoice == 2) {
-        char *period = "AM";
+        string period = "AM";
 
         if (hour >= 12)
             period = "PM";
 
         hour = hour % 12;
+
         if (hour == 0)
             hour = 12;
 
         int timeParts[3] = {hour, local->tm_min, local->tm_sec};
 
-        printf("Time: ");
+        cout << "Time: ";
+
         for (int i = 0; i < 3; i++) {
             if (i == 2)
-                printf("%02d ", timeParts[i]);
+                cout << setw(2) << setfill('0') << timeParts[i] << " ";
             else
-                printf("%02d:", timeParts[i]);
+                cout << setw(2) << setfill('0') << timeParts[i] << ":";
         }
-        printf("%s\n", period);
+
+        cout << period << endl;
 
     } else {
-        // 24-hour format
+        
         int timeParts[3] = {local->tm_hour, local->tm_min, local->tm_sec};
 
-        printf("Time: ");
+        cout << "Time: ";
+
         for (int i = 0; i < 3; i++) {
             if (i == 2)
-                printf("%02d\n", timeParts[i]);
+                cout << setw(2) << setfill('0') << timeParts[i];
             else
-                printf("%02d:", timeParts[i]);
+                cout << setw(2) << setfill('0') << timeParts[i] << ":";
         }
+
+        cout << endl;
     }
 }
 
 int main() {
     int choice;
 
-    printf("===== CLOCK MENU =====\n");
-    printf("1. 24-Hour Format\n");
-    printf("2. 12-Hour Format (AM/PM)\n");
+    cout << "===== CLOCK MENU =====" << endl;
+    cout << "1. 24-Hour Format" << endl;
+    cout << "2. 12-Hour Format (AM/PM)" << endl;
 
-    printf("Enter your choice: ");
-    scanf("%d", &choice);
+    cout << "Enter your choice: ";
+    cin >> choice;
 
-    // Validation using loop
-    for (; !(choice == 1 || choice == 2); ) {
-        printf("Invalid choice! Enter again: ");
-        scanf("%d", &choice);
+    while (!(choice == 1 || choice == 2)) {
+        cout << "Invalid choice! Enter again: ";
+        cin >> choice;
     }
 
     displayClock(choice);
